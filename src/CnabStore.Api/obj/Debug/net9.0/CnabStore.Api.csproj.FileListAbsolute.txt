@@ -193,3 +193,5 @@ C:\repo\bycoders-backend-challenge\src\CnabStore.Api\bin\Debug\net9.0\Swashbuckl
 C:\repo\bycoders-backend-challenge\src\CnabStore.Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\repo\bycoders-backend-challenge\src\CnabStore.Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\repo\bycoders-backend-challenge\src\CnabStore.Api\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
+C:\repo\bycoders-backend-challenge\src\CnabStore.Api\bin\Debug\net9.0\Web\wwwroot\index.html
+C:\repo\bycoders-backend-challenge\src\CnabStore.Api\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.InMemory.dll

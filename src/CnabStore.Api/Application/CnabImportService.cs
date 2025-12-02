@@ -75,9 +75,7 @@ public class CnabImportService : ICnabImportService
         );
     }
 
-    private async Task UpsertStoreAndAddTransactionAsync(
-        TransactionDto dto,
-        CancellationToken cancellationToken)
+    private async Task UpsertStoreAndAddTransactionAsync(TransactionDto dto, CancellationToken cancellationToken)
     {
         var store = await FindOrCreateStoreAsync(dto, cancellationToken);
 

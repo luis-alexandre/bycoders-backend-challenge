@@ -2,30 +2,36 @@
 
 services:
   db:
-    image: postgres:16
-    container_name: CnabStore-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: cnabstore-sql
     environment:
-      POSTGRES_USER: cnabuser
-      POSTGRES_PASSWORD: cnabpass
-      POSTGRES_DB: cnabstore
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Your_strong_Password123!"
+      MSSQL_PID: "Express"
     ports:
-      - "5432:5432"
+      - "1433:1433"
     volumes:
-      - CnabStore-db-data:/var/lib/postgresql/data
+      - cnabstore-sql-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "(/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'Your_strong_Password123!' -Q 'SELECT 1' -No" ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
 
   api:
     build:
-      context: ./src/CnabStore.Api
-      dockerfile: Dockerfile
-    container_name: CnabStore-api
+      context: .
+      dockerfile: src/CnabStore.Api/Dockerfile
+    container_name: cnabstore-api
     depends_on:
       - db
     environment:
-      ASPNETCORE_URLS: "http://+:8080"
       ASPNETCORE_ENVIRONMENT: "Development"
-      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=cnabstore;Username=cnabuser;Password=cnabpass"
+      ASPNETCORE_URLS: "http://+:8080"
+      ConnectionStrings__DefaultConnection: "Server=db,1433;Database=cnabstore;User Id=sa;Password=Your_strong_Password123!;TrustServerCertificate=True;MultipleActiveResultSets=True"
     ports:
       - "8080:8080"
 
 volumes:
-  CnabStore-db-data:
+  cnabstore-sql-data:

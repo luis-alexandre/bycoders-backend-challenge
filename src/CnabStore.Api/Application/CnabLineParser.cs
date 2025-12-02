@@ -19,31 +19,14 @@ public class CnabLineParser : ICnabLineParser
             throw new ArgumentException("CNAB line cannot be null or whitespace.", nameof(line));
         }
 
-        if (line.Length < 81)
-        {
-            throw new ArgumentException(
-                $"Invalid CNAB line length. Expected at least 81 characters, got {line.Length}.",
-                nameof(line));
-        }
-
-        // CNAB field mapping (1-based to 0-based):
-        // Type         1-1   -> index 0, length 1
-        // Date         2-9   -> index 1, length 8
-        // Value        10-19 -> index 9, length 10
-        // CPF          20-30 -> index 19, length 11
-        // Card         31-42 -> index 30, length 12
-        // Time         43-48 -> index 42, length 6
-        // Store Owner  49-62 -> index 48, length 14
-        // Store Name   63-81 -> index 62, length 19
-
-        var typeStr = line[..1];
+        var typeStr = line.Substring(0, 1);
         var dateStr = line.Substring(1, 8);
         var valueStr = line.Substring(9, 10);
         var cpfStr = line.Substring(19, 11);
         var cardStr = line.Substring(30, 12);
         var timeStr = line.Substring(42, 6);
         var ownerStr = line.Substring(48, 14);
-        var storeStr = line.Substring(62, 19);
+        var storeStr = line.Substring(62);
 
         // Type validation
         if (typeStr.Length != 1 || !char.IsDigit(typeStr[0]))

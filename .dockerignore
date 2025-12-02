@@ -1,0 +1,14 @@
+.vs/
+bin/
+obj/
+[Bb]uild/
+[Ll]ogs/
+[Tt]estResults/
+[Aa]rtifacts/
+node_modules/
+dist/
+
+.git
+.gitignore
+docker-compose.yml
+*.md

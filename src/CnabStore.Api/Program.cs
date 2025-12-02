@@ -1,12 +1,10 @@
 using CnabStore.Api.Application;
 using CnabStore.Api.Application.Dtos;
-using CnabStore.Api.Application.Interfaces;
 using CnabStore.Api.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Database connection string (PostgreSQL by default)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                        ?? "Host=localhost;Port=5432;Database=cnabstore;Username=cnabuser;Password=cnabpass";
 
@@ -40,17 +38,23 @@ if (app.Environment.IsDevelopment())
 // Root endpoint serving the HTML page
 app.MapGet("/", async context =>
 {
-    context.Response.ContentType = "text/html; charset=utf-8";
+    var filePath = Path.Combine(app.Environment.ContentRootPath, "Web", "wwwroot", "index.html");
 
-    // The file path is relative to the content root.
-    await context.Response.SendFileAsync("Web/wwwroot/index.html");
+    if (!File.Exists(filePath))
+    {
+        context.Response.StatusCode = StatusCodes.Status404NotFound;
+        await context.Response.WriteAsync("index.html not found.");
+        return;
+    }
+
+    context.Response.ContentType = "text/html; charset=utf-8";
+    await context.Response.SendFileAsync(filePath);
 });
 
 // File upload endpoint for CNAB
-app.MapPost("/api/cnab/upload", async (
-    HttpRequest request,
-    ICnabImportService importService,
-    CancellationToken cancellationToken) =>
+app.MapPost("/api/cnab/upload", async (HttpRequest request,
+                                       ICnabImportService importService,
+                                       CancellationToken cancellationToken) =>
 {
     if (!request.HasFormContentType)
     {

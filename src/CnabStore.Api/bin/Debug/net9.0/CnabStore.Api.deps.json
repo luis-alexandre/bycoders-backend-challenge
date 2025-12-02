@@ -11,6 +11,7 @@
           "Microsoft.AspNetCore.OpenApi": "9.0.5",
           "Microsoft.EntityFrameworkCore": "9.0.11",
           "Microsoft.EntityFrameworkCore.Design": "9.0.11",
+          "Microsoft.EntityFrameworkCore.InMemory": "9.0.11",
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.11",
           "Microsoft.EntityFrameworkCore.Tools": "9.0.11",
           "Swashbuckle.AspNetCore": "9.0.6"
@@ -472,6 +473,19 @@
         },
         "runtime": {
           "lib/net8.0/Microsoft.EntityFrameworkCore.Design.dll": {
+            "assemblyVersion": "9.0.11.0",
+            "fileVersion": "9.0.1125.51902"
+          }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.InMemory/9.0.11": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "9.0.11",
+          "Microsoft.Extensions.Caching.Memory": "9.0.11",
+          "Microsoft.Extensions.Logging": "9.0.11"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll": {
             "assemblyVersion": "9.0.11.0",
             "fileVersion": "9.0.1125.51902"
           }
@@ -1216,6 +1230,13 @@
       "sha512": "sha512-rhB1jmklM0JF9ZXP69vk1RUfxPbH5EZS+0cvbsxZBUd94/4/xJ/PUXNtMVCZl7/KJnFWTyKmUIXYl6Z5QJPfhQ==",
       "path": "microsoft.entityframeworkcore.design/9.0.11",
       "hashPath": "microsoft.entityframeworkcore.design.9.0.11.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.InMemory/9.0.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0uoF/3xXeUqDw4dJOumUKpBSdIZF/E6nWigwDAjEvodDWp9++6/OvCvMj0aXoctPvTSeG/PwZfDqCIfmKhOqgg==",
+      "path": "microsoft.entityframeworkcore.inmemory/9.0.11",
+      "hashPath": "microsoft.entityframeworkcore.inmemory.9.0.11.nupkg.sha512"
     },
     "Microsoft.EntityFrameworkCore.Relational/9.0.11": {
       "type": "package",

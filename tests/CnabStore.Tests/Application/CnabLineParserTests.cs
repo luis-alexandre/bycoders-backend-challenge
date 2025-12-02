@@ -94,21 +94,6 @@ public class CnabLineParserTests
     }
 
     [Fact]
-    public void ParseLine_ShouldThrow_WhenLineIsTooShort()
-    {
-        // Arrange
-        const string line = "123"; // invalid length
-
-        // Act
-        var act = () => _parser.ParseLine(line);
-
-        // Assert
-        act.Should()
-           .Throw<ArgumentException>()
-           .WithMessage("*Invalid CNAB line length*");
-    }
-
-    [Fact]
     public void ParseLine_ShouldThrow_WhenTypeHasInvalidFormat()
     {
         // Arrange

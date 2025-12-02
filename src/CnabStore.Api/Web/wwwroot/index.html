@@ -3,16 +3,723 @@
 <head>
     <meta charset="UTF-8" />
     <title>CNAB Store Importer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-        body { font-family: Arial, sans-serif; margin: 2rem; }
-        .container { max-width: 800px; margin: 0 auto; }
-        h1 { margin-bottom: 1rem; }
+        :root {
+            --bg: #f5f5f7;
+            --card-bg: #ffffff;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --danger: #dc2626;
+            --border: #e5e7eb;
+            --text: #111827;
+            --muted: #6b7280;
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px 16px 48px;
+        }
+
+        header {
+            margin-bottom: 24px;
+        }
+
+            header h1 {
+                margin: 0 0 4px 0;
+                font-size: 1.8rem;
+            }
+
+            header p {
+                margin: 0;
+                color: var(--muted);
+                font-size: 0.95rem;
+            }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 16px 18px 18px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
+            border: 1px solid var(--border);
+        }
+
+            .card h2 {
+                margin: 0 0 12px 0;
+                font-size: 1.1rem;
+            }
+
+            .card p.description {
+                margin: 0 0 12px 0;
+                color: var(--muted);
+                font-size: 0.9rem;
+            }
+
+        .field {
+            margin-bottom: 12px;
+        }
+
+            .field label {
+                display: block;
+                font-size: 0.9rem;
+                margin-bottom: 4px;
+            }
+
+            .field input[type="file"] {
+                display: block;
+                width: 100%;
+            }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: none;
+            background-color: var(--primary);
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.15s ease, transform 0.1s ease;
+        }
+
+            .button:hover {
+                background-color: var(--primary-dark);
+            }
+
+            .button:active {
+                transform: translateY(1px);
+            }
+
+            .button[disabled] {
+                opacity: 0.6;
+                cursor: default;
+                transform: none;
+            }
+
+        .button-secondary {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+            .button-secondary:hover {
+                background-color: #f9fafb;
+            }
+
+        .button-danger {
+            background-color: var(--danger);
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+
+        .stat-pill {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background-color: #eff6ff;
+            color: #1d4ed8;
+        }
+
+            .stat-pill.error {
+                background-color: #fef2f2;
+                color: #b91c1c;
+            }
+
+            .stat-pill.neutral {
+                background-color: #f3f4f6;
+                color: #4b5563;
+            }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 14px;
+            margin-bottom: 6px;
+        }
+
+            .section-title h3 {
+                margin: 0;
+                font-size: 0.95rem;
+            }
+
+            .section-title span {
+                font-size: 0.8rem;
+                color: var(--muted);
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        thead {
+            background-color: #f9fafb;
+        }
+
+        th,
+        td {
+            padding: 6px 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .tag-income {
+            color: #166534;
+            background-color: #ecfdf3;
+            border-radius: 999px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+        }
+
+        .tag-expense {
+            color: #b91c1c;
+            background-color: #fef2f2;
+            border-radius: 999px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        .mt-4 {
+            margin-top: 16px;
+        }
+
+        .mt-2 {
+            margin-top: 8px;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .gap-2 {
+            gap: 8px;
+        }
+
+        .gap-3 {
+            gap: 12px;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+            margin-bottom: 4px;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        select,
+        input[type="number"] {
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background-color: #ffffff;
+        }
+
+        .error-message {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--danger);
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>CNAB Store Importer</h1>
-    <p>Frontend placeholder. Implement upload form and store list here.</p>
-</div>
+    <div class="page">
+        <header>
+            <h1>CNAB Store Importer</h1>
+            <p>Upload a CNAB file, import transactions into the database, and inspect store balances.</p>
+        </header>
+
+        <div class="layout">
+            <!-- Left card: Upload + Import Result -->
+            <section class="card" id="upload-card">
+                <h2>Upload CNAB file</h2>
+                <p class="description">
+                    Select the CNAB file provided in the challenge and click <strong>Import</strong>.
+                    The backend will parse, validate and persist valid transactions.
+                </p>
+
+                <form id="upload-form">
+                    <div class="field">
+                        <label for="file-input">CNAB file</label>
+                        <input id="file-input" name="file" type="file" accept=".txt,.cnab" required />
+                    </div>
+                    <button type="submit" class="button" id="upload-button">
+                        Import CNAB
+                    </button>
+                    <span id="upload-status" class="muted" style="margin-left: 8px; font-size: 0.8rem;"></span>
+                </form>
+
+                <div id="upload-error" class="error-message" style="display:none;"></div>
+
+                <div id="import-summary" class="stats" style="display:none;">
+                    <div class="stat-pill neutral" id="stat-total"></div>
+                    <div class="stat-pill" id="stat-imported"></div>
+                    <div class="stat-pill error" id="stat-failed"></div>
+                </div>
+
+                <div class="mt-4" id="import-details" style="display:none;">
+                    <div class="section-title">
+                        <h3>Imported lines</h3>
+                        <span id="imported-count-label"></span>
+                    </div>
+                    <div id="imported-empty" class="muted" style="display:none; font-size:0.8rem;">
+                        No lines were imported.
+                    </div>
+                    <div id="imported-table-wrapper" style="max-height: 220px; overflow: auto; border-radius: 6px; border: 1px solid #e5e7eb; background-color:#f9fafb;">
+                        <table id="imported-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Store</th>
+                                    <th>Owner</th>
+                                    <th>Value</th>
+                                    <th>Date</th>
+                                    <th>CPF / Card</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <div class="section-title" style="margin-top:16px;">
+                        <h3>Failed lines</h3>
+                        <span id="failed-count-label"></span>
+                    </div>
+                    <div id="failed-empty" class="muted" style="display:none; font-size:0.8rem;">
+                        No lines failed.
+                    </div>
+                    <div id="failed-table-wrapper" style="max-height: 220px; overflow: auto; border-radius: 6px; border: 1px solid #fee2e2; background-color:#fef2f2;">
+                        <table id="failed-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Error</th>
+                                    <th>Raw line</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right card: Store summaries + pagination -->
+            <section class="card" id="stores-card">
+                <h2>Store balances</h2>
+                <p class="description">
+                    This list is built from the data persisted in the database after importing CNAB files.
+                </p>
+
+                <div class="pagination">
+                    <div class="flex items-center gap-2">
+                        <button class="button button-secondary" id="btn-prev">Prev</button>
+                        <button class="button button-secondary" id="btn-next">Next</button>
+                        <span id="page-info"></span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span>Page size:</span>
+                        <select id="page-size">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="stores-error" class="error-message" style="display:none;"></div>
+
+                <div id="stores-empty" class="muted" style="display:none; font-size:0.8rem;">
+                    No stores found. Import a CNAB file to see results here.
+                </div>
+
+                <div id="stores-table-wrapper" style="max-height: 340px; overflow:auto; border-radius:6px; border:1px solid #e5e7eb; background-color:#f9fafb;">
+                    <table id="stores-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Store</th>
+                                <th>Owner</th>
+                                <th>Total balance</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+    const uploadForm = document.getElementById("upload-form");
+    const uploadButton = document.getElementById("upload-button");
+    const uploadStatus = document.getElementById("upload-status");
+    const uploadError = document.getElementById("upload-error");
+
+    const importSummary = document.getElementById("import-summary");
+    const statTotal = document.getElementById("stat-total");
+    const statImported = document.getElementById("stat-imported");
+    const statFailed = document.getElementById("stat-failed");
+
+    const importDetails = document.getElementById("import-details");
+    const importedCountLabel = document.getElementById("imported-count-label");
+    const failedCountLabel = document.getElementById("failed-count-label");
+    const importedEmpty = document.getElementById("imported-empty");
+    const failedEmpty = document.getElementById("failed-empty");
+    const importedTableBody = document.querySelector("#imported-table tbody");
+    const failedTableBody = document.querySelector("#failed-table tbody");
+
+    const btnPrev = document.getElementById("btn-prev");
+    const btnNext = document.getElementById("btn-next");
+    const pageSizeSelect = document.getElementById("page-size");
+    const pageInfo = document.getElementById("page-info");
+    const storesError = document.getElementById("stores-error");
+    const storesEmpty = document.getElementById("stores-empty");
+    const storesTableBody = document.querySelector("#stores-table tbody");
+    const storesCard = document.getElementById("stores-card");
+
+    let currentPage = 1;
+    let totalPages = 0;
+
+    function formatCurrency(value) {
+        if (typeof value !== "number") {
+            return value;
+        }
+        return value.toLocaleString("en-US", {
+            style: "currency",
+            currency: "BRL"
+        });
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return "";
+        const d = new Date(dateString);
+        if (Number.isNaN(d.getTime())) return dateString;
+        return d.toLocaleString();
+    }
+
+    // Upload & import handler
+    uploadForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const fileInput = document.getElementById("file-input");
+        if (!fileInput.files || fileInput.files.length === 0) {
+            uploadError.textContent = "Please select a CNAB file.";
+            uploadError.style.display = "block";
+            return;
+        }
+
+        uploadError.style.display = "none";
+        uploadStatus.textContent = "Uploading and processing...";
+        uploadButton.disabled = true;
+        uploadForm.classList.add("loading");
+
+        try {
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            const response = await fetch("/api/cnab/upload", {
+                method: "POST",
+                body: formData
+            });
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(text || "Unexpected error while importing file.");
+            }
+
+            const result = await response.json();
+            renderImportResult(result);
+
+            // Refresh store list after successful import
+            await loadStoresSummary();
+
+            uploadStatus.textContent = "Import finished.";
+        } catch (err) {
+            console.error(err);
+            uploadError.textContent = err.message || "An unexpected error occurred.";
+            uploadError.style.display = "block";
+            importSummary.style.display = "none";
+            importDetails.style.display = "none";
+            uploadStatus.textContent = "";
+        } finally {
+            uploadButton.disabled = false;
+            uploadForm.classList.remove("loading");
+        }
+    });
+
+    function renderImportResult(result) {
+        if (!result) return;
+
+        const {
+            totalLines,
+            importedCount,
+            failedCount,
+            imported,
+            failed
+        } = result;
+
+        // Summary pills
+        importSummary.style.display = "flex";
+        statTotal.textContent = `Total processed lines: ${totalLines}`;
+        statImported.textContent = `Imported: ${importedCount}`;
+        statFailed.textContent = `Failed: ${failedCount}`;
+
+        // Details
+        importDetails.style.display = "block";
+
+        // Imported table
+        importedTableBody.innerHTML = "";
+        importedCountLabel.textContent = `${importedCount} line(s)`;
+
+        if (!imported || imported.length === 0) {
+            importedEmpty.style.display = "block";
+        } else {
+            importedEmpty.style.display = "none";
+
+            imported.forEach((item, index) => {
+                const tr = document.createElement("tr");
+                const t = item.transaction;
+
+                const tdIndex = document.createElement("td");
+                tdIndex.textContent = item.lineNumber;
+
+                const tdStore = document.createElement("td");
+                tdStore.innerHTML = `<strong>${t.storeName}</strong>`;
+
+                const tdOwner = document.createElement("td");
+                tdOwner.textContent = t.storeOwner;
+
+                const tdValue = document.createElement("td");
+                tdValue.textContent = formatCurrency(t.value);
+
+                const tdDate = document.createElement("td");
+                tdDate.textContent = formatDate(t.occurredAt);
+
+                const tdCpfCard = document.createElement("td");
+                tdCpfCard.innerHTML = `
+                    <div>CPF: <span class="muted">${t.cpf}</span></div>
+                    <div>Card: <span class="muted">${t.card}</span></div>
+                `;
+
+                tr.appendChild(tdIndex);
+                tr.appendChild(tdStore);
+                tr.appendChild(tdOwner);
+                tr.appendChild(tdValue);
+                tr.appendChild(tdDate);
+                tr.appendChild(tdCpfCard);
+
+                importedTableBody.appendChild(tr);
+            });
+        }
+
+        // Failed table
+        failedTableBody.innerHTML = "";
+        failedCountLabel.textContent = `${failedCount} line(s)`;
+
+        if (!failed || failed.length === 0) {
+            failedEmpty.style.display = "block";
+        } else {
+            failedEmpty.style.display = "none";
+
+            failed.forEach((item) => {
+                const tr = document.createElement("tr");
+
+                const tdIndex = document.createElement("td");
+                tdIndex.textContent = item.lineNumber;
+
+                const tdError = document.createElement("td");
+                tdError.textContent = item.error;
+
+                const tdRaw = document.createElement("td");
+                tdRaw.innerHTML = `<code style="font-size:0.75rem;">${escapeHtml(item.rawLine)}</code>`;
+
+                tr.appendChild(tdIndex);
+                tr.appendChild(tdError);
+                tr.appendChild(tdRaw);
+
+                failedTableBody.appendChild(tr);
+            });
+        }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+    }
+
+    // Store summary / pagination
+    async function loadStoresSummary() {
+        storesError.style.display = "none";
+        storesEmpty.style.display = "none";
+        storesCard.classList.add("loading");
+
+        const pageSize = parseInt(pageSizeSelect.value, 10) || 10;
+
+        try {
+            const url = `/api/stores/summary?page=${currentPage}&pageSize=${pageSize}`;
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(text || "Failed to load store summaries.");
+            }
+
+            const data = await response.json();
+            const { items, totalItems, totalPages: tp, page, pageSize: ps } = data;
+
+            totalPages = tp || 0;
+            currentPage = page || 1;
+
+            pageInfo.textContent = totalItems
+                ? `Page ${currentPage} of ${totalPages} • ${totalItems} store(s)`
+                : "No data";
+
+            btnPrev.disabled = currentPage <= 1;
+            btnNext.disabled = totalPages === 0 || currentPage >= totalPages;
+
+            renderStoresTable(items || []);
+
+            if (!items || items.length === 0) {
+                storesEmpty.style.display = "block";
+            }
+        } catch (err) {
+            console.error(err);
+            storesError.textContent = err.message || "An unexpected error occurred.";
+            storesError.style.display = "block";
+        } finally {
+            storesCard.classList.remove("loading");
+        }
+    }
+
+    function renderStoresTable(items) {
+        storesTableBody.innerHTML = "";
+
+        items.forEach((item, index) => {
+            const tr = document.createElement("tr");
+
+            const tdIndex = document.createElement("td");
+            tdIndex.textContent = item.storeId;
+
+            const tdStore = document.createElement("td");
+            tdStore.innerHTML = `<strong>${item.storeName}</strong>`;
+
+            const tdOwner = document.createElement("td");
+            tdOwner.textContent = item.ownerName;
+
+            const tdBalance = document.createElement("td");
+            tdBalance.textContent = formatCurrency(item.totalBalance);
+
+            tr.appendChild(tdIndex);
+            tr.appendChild(tdStore);
+            tr.appendChild(tdOwner);
+            tr.appendChild(tdBalance);
+
+            storesTableBody.appendChild(tr);
+        });
+    }
+
+    btnPrev.addEventListener("click", async () => {
+        if (currentPage > 1) {
+            currentPage--;
+            await loadStoresSummary();
+        }
+    });
+
+    btnNext.addEventListener("click", async () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            await loadStoresSummary();
+        }
+    });
+
+    pageSizeSelect.addEventListener("change", async () => {
+        currentPage = 1;
+        await loadStoresSummary();
+    });
+
+    // Initial load
+    loadStoresSummary();
+    </script>
 </body>
 </html>
