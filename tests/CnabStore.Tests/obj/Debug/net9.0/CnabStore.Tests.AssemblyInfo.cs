@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CnabStore.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+29423485daa3da42436fc507df1853b73e9e10f8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+60eeefc049ccdd74cc219ff9899456b8e5086a24")]
 [assembly: System.Reflection.AssemblyProductAttribute("CnabStore.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CnabStore.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
