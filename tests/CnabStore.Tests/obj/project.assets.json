@@ -231,6 +231,24 @@
       "Microsoft.EntityFrameworkCore.Analyzers/9.0.11": {
         "type": "package"
       },
+      "Microsoft.EntityFrameworkCore.InMemory/9.0.11": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "9.0.11",
+          "Microsoft.Extensions.Caching.Memory": "9.0.11",
+          "Microsoft.Extensions.Logging": "9.0.11"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.EntityFrameworkCore.Relational/9.0.11": {
         "type": "package",
         "dependencies": {
@@ -1971,6 +1989,21 @@
         "docs/PACKAGE.md",
         "microsoft.entityframeworkcore.analyzers.9.0.11.nupkg.sha512",
         "microsoft.entityframeworkcore.analyzers.nuspec"
+      ]
+    },
+    "Microsoft.EntityFrameworkCore.InMemory/9.0.11": {
+      "sha512": "0uoF/3xXeUqDw4dJOumUKpBSdIZF/E6nWigwDAjEvodDWp9++6/OvCvMj0aXoctPvTSeG/PwZfDqCIfmKhOqgg==",
+      "type": "package",
+      "path": "microsoft.entityframeworkcore.inmemory/9.0.11",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll",
+        "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.xml",
+        "microsoft.entityframeworkcore.inmemory.9.0.11.nupkg.sha512",
+        "microsoft.entityframeworkcore.inmemory.nuspec"
       ]
     },
     "Microsoft.EntityFrameworkCore.Relational/9.0.11": {
@@ -3922,6 +3955,7 @@
     "net9.0": [
       "CnabStore.Api >= 1.0.0",
       "FluentAssertions >= 8.8.0",
+      "Microsoft.EntityFrameworkCore.InMemory >= 9.0.11",
       "Microsoft.NET.Test.Sdk >= 17.12.0",
       "Moq >= 4.20.72",
       "coverlet.collector >= 6.0.2",
@@ -3987,6 +4021,10 @@
           "FluentAssertions": {
             "target": "Package",
             "version": "[8.8.0, )"
+          },
+          "Microsoft.EntityFrameworkCore.InMemory": {
+            "target": "Package",
+            "version": "[9.0.11, )"
           },
           "Microsoft.NET.Test.Sdk": {
             "target": "Package",

@@ -20,8 +20,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Application\Dtos\" />
-  </ItemGroup>
-
 </Project>
