@@ -1,0 +1,31 @@
+﻿version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: CnabStore-db
+    environment:
+      POSTGRES_USER: cnabuser
+      POSTGRES_PASSWORD: cnabpass
+      POSTGRES_DB: cnabstore
+    ports:
+      - "5432:5432"
+    volumes:
+      - CnabStore-db-data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./src/CnabStore.Api
+      dockerfile: Dockerfile
+    container_name: CnabStore-api
+    depends_on:
+      - db
+    environment:
+      ASPNETCORE_URLS: "http://+:8080"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=cnabstore;Username=cnabuser;Password=cnabpass"
+    ports:
+      - "8080:8080"
+
+volumes:
+  CnabStore-db-data:
