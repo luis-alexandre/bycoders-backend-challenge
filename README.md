@@ -1,5 +1,4 @@
-﻿````markdown
-# CNAB Store Importer (.NET 9 + SQL Server)
+﻿# CNAB Store Importer (.NET 9 + SQL Server)
 
 This project is a solution for the ByCoders backend challenge.  
 It receives a CNAB file with financial transactions, validates and imports it into a SQL Server database, and exposes a minimal frontend to upload files and inspect store balances.
