@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CnabStore.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f0818bedc3b01a737e340635b00bd917e76dd283")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+29423485daa3da42436fc507df1853b73e9e10f8")]
 [assembly: System.Reflection.AssemblyProductAttribute("CnabStore.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CnabStore.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

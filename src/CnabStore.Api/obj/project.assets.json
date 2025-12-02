@@ -81,11 +81,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\repo\\bycoders-backend-challenge\\CnabStore\\src\\CnabStore.Api\\CnabStore.Api.csproj",
+      "projectUniqueName": "C:\\repo\\bycoders-backend-challenge\\src\\CnabStore.Api\\CnabStore.Api.csproj",
       "projectName": "CnabStore.Api",
-      "projectPath": "C:\\repo\\bycoders-backend-challenge\\CnabStore\\src\\CnabStore.Api\\CnabStore.Api.csproj",
+      "projectPath": "C:\\repo\\bycoders-backend-challenge\\src\\CnabStore.Api\\CnabStore.Api.csproj",
       "packagesPath": "C:\\Users\\Usuário\\.nuget\\packages\\",
-      "outputPath": "C:\\repo\\bycoders-backend-challenge\\CnabStore\\src\\CnabStore.Api\\obj\\",
+      "outputPath": "C:\\repo\\bycoders-backend-challenge\\src\\CnabStore.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
