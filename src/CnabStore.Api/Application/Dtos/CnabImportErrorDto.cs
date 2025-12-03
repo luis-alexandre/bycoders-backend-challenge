@@ -1,5 +1,8 @@
 ﻿namespace CnabStore.Api.Application.Dtos
 {
+    /// <summary>
+    /// Cnab import error details for a specific line in the import file.
+    /// </summary>
     public class CnabImportErrorDto
     {
         public int LineNumber { get; set; }

@@ -1,5 +1,4 @@
 ﻿using CnabStore.Api.Domain;
-using Xunit;
 
 namespace CnabStore.Tests;
 

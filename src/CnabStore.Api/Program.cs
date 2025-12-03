@@ -77,11 +77,10 @@ app.MapPost("/api/cnab/upload", async (HttpRequest request,
 });
 
 // Store summary endpoint (list of imported operations by store + total balance)
-app.MapGet("/api/stores/summary", async (
-        AppDbContext db,
-        int page,
-        int pageSize,
-        CancellationToken cancellationToken) =>
+app.MapGet("/api/stores/summary", async (AppDbContext db,
+                                         int page,
+                                         int pageSize,
+                                         CancellationToken cancellationToken) =>
 {
     // Basic guards and defaults
     if (page <= 0)
@@ -106,14 +105,11 @@ app.MapGet("/api/stores/summary", async (
 
     var skip = (page - 1) * pageSize;
 
-    var query = db.Stores
-        .OrderBy(s => s.Name)
-        .Select(s => new StoreSummaryDto(
-            s.Id,
-            s.Name,
-            s.OwnerName,
-            s.Transactions.Sum(t => t.Value)
-        ));
+    var query = db.Stores.OrderBy(s => s.Name)
+                         .Select(s => new StoreSummaryDto(s.Id,
+                                                          s.Name,
+                                                          s.OwnerName,
+                                                          s.Transactions.Sum(t => t.Value)));
 
     var items = await query.Skip(skip)
                            .Take(pageSize)

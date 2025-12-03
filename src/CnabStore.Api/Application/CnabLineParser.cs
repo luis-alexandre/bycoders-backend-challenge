@@ -117,14 +117,12 @@ public class CnabLineParser : ICnabLineParser
         // Raw value must be divided by 100 and then sign applied (+1 or -1).
         var value = (rawValue / 100m) * metadata.Sign;
 
-        return new TransactionDto(
-            Type: typeInt,
-            OccurredAt: occurredAt,
-            Value: value,
-            Cpf: cpf,
-            Card: card,
-            StoreOwner: storeOwner,
-            StoreName: storeName
-        );
+        return new TransactionDto(Type: typeInt,
+                                  OccurredAt: occurredAt,
+                                  Value: value,
+                                  Cpf: cpf,
+                                  Card: card,
+                                  StoreOwner: storeOwner,
+                                  StoreName: storeName);
     }
 }

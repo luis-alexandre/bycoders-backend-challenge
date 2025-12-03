@@ -46,18 +46,11 @@ public class CnabImportService : ICnabImportService
                 var dto = _parser.ParseLine(line);
                 await UpsertStoreAndAddTransactionAsync(dto, cancellationToken);
 
-                imported.Add(new CnabImportSuccessDto(
-                    lineNumber,
-                    dto
-                ));
+                imported.Add(new CnabImportSuccessDto(lineNumber, dto));
             }
             catch (Exception ex)
             {
-                failed.Add(new CnabImportErrorDto(
-                    lineNumber,
-                    ex.Message,
-                    line
-                ));
+                failed.Add(new CnabImportErrorDto(lineNumber, ex.Message, line));
             }
         }
 
@@ -66,13 +59,11 @@ public class CnabImportService : ICnabImportService
 
         var totalLines = imported.Count + failed.Count;
 
-        return new CnabImportResultDto(
-            TotalLines: totalLines,
-            ImportedCount: imported.Count,
-            FailedCount: failed.Count,
-            Imported: imported,
-            Failed: failed
-        );
+        return new CnabImportResultDto(TotalLines: totalLines,
+                                       ImportedCount: imported.Count,
+                                       FailedCount: failed.Count,
+                                       Imported: imported,
+                                       Failed: failed);
     }
 
     private async Task UpsertStoreAndAddTransactionAsync(TransactionDto dto, CancellationToken cancellationToken)
@@ -96,26 +87,17 @@ public class CnabImportService : ICnabImportService
     /// Looks for an existing store in the current change tracker first (Local),
     /// then in the database. If none is found, creates a new one and attaches it.
     /// </summary>
-    private async Task<Store> FindOrCreateStoreAsync(
-        TransactionDto dto,
-        CancellationToken cancellationToken)
+    private async Task<Store> FindOrCreateStoreAsync(TransactionDto dto, CancellationToken cancellationToken)
     {
-        // 1) Check tracked entities (including Added) in memory
-        var store = _dbContext.Stores.Local
-            .FirstOrDefault(s =>
-                s.Name == dto.StoreName &&
-                s.OwnerName == dto.StoreOwner);
+        var store = _dbContext.Stores.Local.FirstOrDefault(s => s.Name == dto.StoreName &&
+                                                                s.OwnerName == dto.StoreOwner);
 
-        // 2) If not found in Local, query the database
         if (store is null)
         {
-            store = await _dbContext.Stores
-                .FirstOrDefaultAsync(
-                    s => s.Name == dto.StoreName && s.OwnerName == dto.StoreOwner,
-                    cancellationToken);
+            store = await _dbContext.Stores.FirstOrDefaultAsync(s => s.Name == dto.StoreName && s.OwnerName == dto.StoreOwner,
+                                                                cancellationToken);
         }
 
-        // 3) If still not found, create a new one and add it
         if (store is null)
         {
             store = new Store

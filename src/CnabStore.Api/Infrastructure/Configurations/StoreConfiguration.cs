@@ -16,17 +16,17 @@ public class StoreConfiguration : IEntityTypeConfiguration<Store>
         builder.HasKey(s => s.Id);
 
         builder.Property(s => s.Name)
-            .IsRequired()
-            .HasMaxLength(100);
+               .IsRequired()
+               .HasMaxLength(100);
 
         builder.Property(s => s.OwnerName)
-            .IsRequired()
-            .HasMaxLength(100);
+               .IsRequired()
+               .HasMaxLength(100);
 
         builder.HasMany(s => s.Transactions)
-            .WithOne(t => t.Store)
-            .HasForeignKey(t => t.StoreId)
-            .OnDelete(DeleteBehavior.Cascade);
+               .WithOne(t => t.Store)
+               .HasForeignKey(t => t.StoreId)
+               .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(s => s.Name);
         builder.HasIndex(s => s.OwnerName);

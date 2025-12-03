@@ -11,8 +11,7 @@ namespace CnabStore.Api.Domain;
 public sealed record TransactionTypeMetadata(TransactionType Type,
                                              string Description,
                                              string Nature,
-                                             int Sign
-)
+                                             int Sign)
 {
     private static readonly IReadOnlyDictionary<TransactionType, TransactionTypeMetadata> _all =
         new ReadOnlyDictionary<TransactionType, TransactionTypeMetadata>(

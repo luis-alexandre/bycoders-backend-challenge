@@ -3,7 +3,6 @@ using CnabStore.Api.Application.Dtos;
 using CnabStore.Api.Application.Interfaces;
 using CnabStore.Api.Domain;
 using FluentAssertions;
-using Xunit;
 
 namespace CnabStore.Tests;
 
@@ -18,15 +17,14 @@ public class CnabLineParserTests
     /// Helper to build a valid CNAB line based on field values,
     /// respecting all sizes defined in the specification.
     /// </summary>
-    private static string BuildLine(
-        string type,
-        string date,
-        string value,
-        string cpf,
-        string card,
-        string time,
-        string storeOwner,
-        string storeName)
+    private static string BuildLine(string type,
+                                    string date,
+                                    string value,
+                                    string cpf,
+                                    string card,
+                                    string time,
+                                    string storeOwner,
+                                    string storeName)
     {
         // Respect field lengths:
         // type: 1
@@ -97,16 +95,14 @@ public class CnabLineParserTests
     public void ParseLine_ShouldThrow_WhenTypeHasInvalidFormat()
     {
         // Arrange
-        var line = BuildLine(
-            type: "X",                 // invalid
-            date: "20190301",
-            value: "0000010000",
-            cpf: "12345678901",
-            card: "1234****5678",
-            time: "153000",
-            storeOwner: "OWNER",
-            storeName: "STORE"
-        );
+        var line = BuildLine(type: "X", // invalid
+                             date: "20190301",
+                             value: "0000010000",
+                             cpf: "12345678901",
+                             card: "1234****5678",
+                             time: "153000",
+                             storeOwner: "OWNER",
+                             storeName: "STORE");
 
         // Act
         var act = () => _parser.ParseLine(line);
@@ -121,16 +117,14 @@ public class CnabLineParserTests
     public void ParseLine_ShouldThrow_WhenTypeIsOutOfRange()
     {
         // Arrange
-        var line = BuildLine(
-            type: "0",                 // not mapped to enum
-            date: "20190301",
-            value: "0000010000",
-            cpf: "12345678901",
-            card: "1234****5678",
-            time: "153000",
-            storeOwner: "OWNER",
-            storeName: "STORE"
-        );
+        var line = BuildLine(type: "0",  // not mapped to enum
+                             date: "20190301",
+                             value: "0000010000",
+                             cpf: "12345678901",
+                             card: "1234****5678",
+                             time: "153000",
+                             storeOwner: "OWNER",
+                             storeName: "STORE");
 
         // Act
         var act = () => _parser.ParseLine(line);
@@ -145,16 +139,14 @@ public class CnabLineParserTests
     public void ParseLine_ShouldThrow_WhenDateHasNonDigits()
     {
         // Arrange
-        var line = BuildLine(
-            type: "1",
-            date: "2019AA01",          // invalid
-            value: "0000010000",
-            cpf: "12345678901",
-            card: "1234****5678",
-            time: "153000",
-            storeOwner: "OWNER",
-            storeName: "STORE"
-        );
+        var line = BuildLine(type: "1",
+                             date: "2019AA01", // invalid
+                             value: "0000010000",
+                             cpf: "12345678901",
+                             card: "1234****5678",
+                             time: "153000",
+                             storeOwner: "OWNER",
+                             storeName: "STORE");
 
         // Act
         var act = () => _parser.ParseLine(line);
@@ -169,16 +161,14 @@ public class CnabLineParserTests
     public void ParseLine_ShouldThrow_WhenTimeHasNonDigits()
     {
         // Arrange
-        var line = BuildLine(
-            type: "1",
-            date: "20190301",
-            value: "0000010000",
-            cpf: "12345678901",
-            card: "1234****5678",
-            time: "15AA00",            // invalid
-            storeOwner: "OWNER",
-            storeName: "STORE"
-        );
+        var line = BuildLine(type: "1",
+                             date: "20190301",
+                             value: "0000010000",
+                             cpf: "12345678901",
+                             card: "1234****5678",
+                             time: "15AA00", // invalid
+                             storeOwner: "OWNER",
+                             storeName: "STORE");
 
         // Act
         var act = () => _parser.ParseLine(line);
@@ -193,16 +183,14 @@ public class CnabLineParserTests
     public void ParseLine_ShouldThrow_WhenValueHasNonDigits()
     {
         // Arrange
-        var line = BuildLine(
-            type: "1",
-            date: "20190301",
-            value: "ABCDEFGHIJ",       // invalid
-            cpf: "12345678901",
-            card: "1234****5678",
-            time: "153000",
-            storeOwner: "OWNER",
-            storeName: "STORE"
-        );
+        var line = BuildLine(type: "1",
+                             date: "20190301",
+                             value: "ABCDEFGHIJ", // invalid
+                             cpf: "12345678901",
+                             card: "1234****5678",
+                             time: "153000",
+                             storeOwner: "OWNER",
+                             storeName: "STORE");
 
         // Act
         var act = () => _parser.ParseLine(line);
@@ -218,16 +206,14 @@ public class CnabLineParserTests
     public void ParseLine_ShouldThrow_WhenCardIsEmptyAfterTrim()
     {
         // Arrange
-        var line = BuildLine(
-            type: "1",
-            date: "20190301",
-            value: "0000010000",
-            cpf: "12345678901",
-            card: "            ",      // 12 spaces
-            time: "153000",
-            storeOwner: "OWNER",
-            storeName: "STORE"
-        );
+        var line = BuildLine(type: "1",
+                             date: "20190301",
+                             value: "0000010000",
+                             cpf: "12345678901",
+                             card: "            ", // 12 spaces
+                             time: "153000",
+                             storeOwner: "OWNER",
+                             storeName: "STORE");
 
         // Act
         var act = () => _parser.ParseLine(line);
@@ -242,16 +228,14 @@ public class CnabLineParserTests
     public void ParseLine_ShouldThrow_WhenStoreOwnerIsEmpty()
     {
         // Arrange
-        var line = BuildLine(
-            type: "1",
-            date: "20190301",
-            value: "0000010000",
-            cpf: "12345678901",
-            card: "1234****5678",
-            time: "153000",
-            storeOwner: "   ",          // empty after trim
-            storeName: "STORE"
-        );
+        var line = BuildLine(type: "1",
+                             date: "20190301",
+                             value: "0000010000",
+                             cpf: "12345678901",
+                             card: "1234****5678",
+                             time: "153000",
+                             storeOwner: "   ", // empty after trim
+                             storeName: "STORE");
 
         // Act
         var act = () => _parser.ParseLine(line);
@@ -266,16 +250,14 @@ public class CnabLineParserTests
     public void ParseLine_ShouldThrow_WhenStoreNameIsEmpty()
     {
         // Arrange
-        var line = BuildLine(
-            type: "1",
-            date: "20190301",
-            value: "0000010000",
-            cpf: "12345678901",
-            card: "1234****5678",
-            time: "153000",
-            storeOwner: "OWNER",
-            storeName: "     "          // empty after trim
-        );
+        var line = BuildLine(type: "1",
+                             date: "20190301",
+                             value: "0000010000",
+                             cpf: "12345678901",
+                             card: "1234****5678",
+                             time: "153000",
+                             storeOwner: "OWNER",
+                             storeName: "     "); // empty after trim
 
         // Act
         var act = () => _parser.ParseLine(line);

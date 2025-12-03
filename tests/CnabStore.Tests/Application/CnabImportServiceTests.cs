@@ -37,25 +37,21 @@ public class CnabImportServiceTests
         var line2 = "line-2";
 
         // Both lines belong to the same store to validate upsert behavior.
-        var dto1 = new TransactionDto(
-            Type: (int)TransactionType.Debit,
-            OccurredAt: new DateTime(2024, 01, 01, 10, 0, 0),
-            Value: 100.00m,
-            Cpf: "12345678901",
-            Card: "1111****1111",
-            StoreOwner: "JOHN DOE",
-            StoreName: "STORE A"
-        );
+        var dto1 = new TransactionDto(Type: (int)TransactionType.Debit,
+                                      OccurredAt: new DateTime(2024, 01, 01, 10, 0, 0),
+                                      Value: 100.00m,
+                                      Cpf: "12345678901",
+                                      Card: "1111****1111",
+                                      StoreOwner: "JOHN DOE",
+                                      StoreName: "STORE A");
 
-        var dto2 = new TransactionDto(
-            Type: (int)TransactionType.Boleto,
-            OccurredAt: new DateTime(2024, 01, 01, 11, 0, 0),
-            Value: -50.00m,
-            Cpf: "12345678901",
-            Card: "2222****2222",
-            StoreOwner: "JOHN DOE",
-            StoreName: "STORE A"
-        );
+        var dto2 = new TransactionDto(Type: (int)TransactionType.Boleto,
+                                      OccurredAt: new DateTime(2024, 01, 01, 11, 0, 0),
+                                      Value: -50.00m,
+                                      Cpf: "12345678901",
+                                      Card: "2222****2222",
+                                      StoreOwner: "JOHN DOE",
+                                      StoreName: "STORE A");
 
         parserMock.Setup(p => p.ParseLine(line1)).Returns(dto1);
         parserMock.Setup(p => p.ParseLine(line2)).Returns(dto2);
@@ -106,19 +102,17 @@ public class CnabImportServiceTests
         var validLine = "line-valid";
         var invalidLine = "line-invalid";
 
-        var validDto = new TransactionDto(
-            Type: (int)TransactionType.Sales,
-            OccurredAt: new DateTime(2024, 01, 02, 9, 0, 0),
-            Value: 200.00m,
-            Cpf: "98765432100",
-            Card: "3333****3333",
-            StoreOwner: "JANE DOE",
-            StoreName: "STORE B"
-        );
+        var validDto = new TransactionDto(Type: (int)TransactionType.Sales,
+                                          OccurredAt: new DateTime(2024, 01, 02, 9, 0, 0),
+                                          Value: 200.00m,
+                                          Cpf: "98765432100",
+                                          Card: "3333****3333",
+                                          StoreOwner: "JANE DOE",
+                                          StoreName: "STORE B");
 
         parserMock.Setup(p => p.ParseLine(validLine)).Returns(validDto);
         parserMock.Setup(p => p.ParseLine(invalidLine))
-            .Throws(new ArgumentException("Invalid transaction value format: 'ABCDEFGHIJ'."));
+                  .Throws(new ArgumentException("Invalid transaction value format: 'ABCDEFGHIJ'."));
 
         var service = new CnabImportService(dbContext, parserMock.Object);
 
@@ -167,25 +161,21 @@ public class CnabImportServiceTests
         var line1 = "line-1";
         var line2 = "line-2";
 
-        var dto1 = new TransactionDto(
-            Type: (int)TransactionType.Sales,
-            OccurredAt: new DateTime(2024, 01, 03, 10, 0, 0),
-            Value: 150.00m,
-            Cpf: "11111111111",
-            Card: "4444****4444",
-            StoreOwner: "OWNER 1",
-            StoreName: "STORE X"
-        );
+        var dto1 = new TransactionDto(Type: (int)TransactionType.Sales,
+                                      OccurredAt: new DateTime(2024, 01, 03, 10, 0, 0),
+                                      Value: 150.00m,
+                                      Cpf: "11111111111",
+                                      Card: "4444****4444",
+                                      StoreOwner: "OWNER 1",
+                                      StoreName: "STORE X");
 
-        var dto2 = new TransactionDto(
-            Type: (int)TransactionType.Credit,
-            OccurredAt: new DateTime(2024, 01, 03, 11, 0, 0),
-            Value: 250.00m,
-            Cpf: "22222222222",
-            Card: "5555****5555",
-            StoreOwner: "OWNER 1",
-            StoreName: "STORE X"
-        );
+        var dto2 = new TransactionDto(Type: (int)TransactionType.Credit,
+                                      OccurredAt: new DateTime(2024, 01, 03, 11, 0, 0),
+                                      Value: 250.00m,
+                                      Cpf: "22222222222",
+                                      Card: "5555****5555",
+                                      StoreOwner: "OWNER 1",
+                                      StoreName: "STORE X");
 
         parserMock.Setup(p => p.ParseLine(line1)).Returns(dto1);
         parserMock.Setup(p => p.ParseLine(line2)).Returns(dto2);
@@ -228,15 +218,13 @@ public class CnabImportServiceTests
 
         var line = "line-1";
 
-        var dto = new TransactionDto(
-            Type: (int)TransactionType.Sales,
-            OccurredAt: new DateTime(2024, 01, 04, 16, 0, 0),
-            Value: 500.00m,
-            Cpf: "55566677788",
-            Card: "5555****5555",
-            StoreOwner: "BOB",        // same as existing
-            StoreName: "STORE D"      // same as existing
-        );
+        var dto = new TransactionDto(Type: (int)TransactionType.Sales,
+                                     OccurredAt: new DateTime(2024, 01, 04, 16, 0, 0),
+                                     Value: 500.00m,
+                                     Cpf: "55566677788",
+                                     Card: "5555****5555",
+                                     StoreOwner: "BOB",        // same as existing
+                                     StoreName: "STORE D");      // same as existing
 
         parserMock.Setup(p => p.ParseLine(line)).Returns(dto);
 
