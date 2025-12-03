@@ -186,12 +186,8 @@ This project is intentionally kept simple to focus on the challenge requirements
   * **Health checks** (`/health`, `/ready`) for liveness/readiness (important for Kubernetes).
   * Metrics via Prometheus/OpenTelemetry (request counts, latency, error rates).
 
-### 5.3. Error handling & validation
+### 5.3. Validation
 
-* Add global exception handling middleware:
-
-  * Consistent error payloads
-  * Proper HTTP status codes (400, 422, 500, etc.)
 * Enhance validation:
 
   * Maximum file size for uploads
