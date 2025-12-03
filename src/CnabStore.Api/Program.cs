@@ -2,8 +2,15 @@ using CnabStore.Api.Application;
 using CnabStore.Api.Application.Dtos;
 using CnabStore.Api.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration)
+                                      .Enrich.FromLogContext()
+                                      .CreateLogger();
+
+builder.Host.UseSerilog();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                        ?? "Host=localhost;Port=5432;Database=cnabstore;Username=cnabuser;Password=cnabpass";
@@ -25,7 +32,11 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    logger.LogInformation("Applying database migrations...");
     db.Database.Migrate();
+    logger.LogInformation("Database migrations applied successfully.");
 }
 
 // Swagger only in Development
@@ -54,10 +65,15 @@ app.MapGet("/", async context =>
 // File upload endpoint for CNAB
 app.MapPost("/api/cnab/upload", async (HttpRequest request,
                                        ICnabImportService importService,
+                                       ILoggerFactory loggerFactory,
                                        CancellationToken cancellationToken) =>
 {
+    var logger = loggerFactory.CreateLogger("CnabUpload");
+    logger.LogInformation("Received CNAB upload request.");
+
     if (!request.HasFormContentType)
     {
+        logger.LogWarning("Upload rejected: invalid content type {ContentType}.", request.ContentType);
         return Results.BadRequest("Form content type expected (multipart/form-data).");
     }
 
@@ -66,6 +82,7 @@ app.MapPost("/api/cnab/upload", async (HttpRequest request,
 
     if (file is null || file.Length == 0)
     {
+        logger.LogWarning("No file uploaded or file is empty.");
         return Results.BadRequest("CNAB file is required.");
     }
 
@@ -73,6 +90,12 @@ app.MapPost("/api/cnab/upload", async (HttpRequest request,
     var result = await importService.ImportAsync(stream, cancellationToken);
 
     // Return detailed information about imported and failed lines
+    logger.LogInformation("Import finished for file {FileName}. TotalLines={TotalLines}, Imported={Imported}, Failed={Failed}.",
+                          file.FileName,
+                          result.TotalLines,
+                          result.ImportedCount,
+                          result.FailedCount);
+
     return Results.Ok(result);
 });
 
@@ -80,8 +103,11 @@ app.MapPost("/api/cnab/upload", async (HttpRequest request,
 app.MapGet("/api/stores/summary", async (AppDbContext db,
                                          int page,
                                          int pageSize,
+                                         ILoggerFactory loggerFactory,
                                          CancellationToken cancellationToken) =>
 {
+    var logger = loggerFactory.CreateLogger("StoreSummary");
+
     // Basic guards and defaults
     if (page <= 0)
     {
@@ -96,6 +122,9 @@ app.MapGet("/api/stores/summary", async (AppDbContext db,
     {
         pageSize = 100; // hard limit to avoid insane page sizes
     }
+
+    logger.LogInformation("Fetching store summary. Page={Page}, PageSize={PageSize}.", page, pageSize);
+
 
     var totalItems = await db.Stores.CountAsync(cancellationToken);
 
@@ -114,6 +143,11 @@ app.MapGet("/api/stores/summary", async (AppDbContext db,
     var items = await query.Skip(skip)
                            .Take(pageSize)
                            .ToListAsync(cancellationToken);
+
+    logger.LogInformation("Store summary fetched. TotalItems={TotalItems}, TotalPages={TotalPages}, ReturnedItems={ReturnedItems}.",
+                          totalItems,
+                          totalPages,
+                          items.Count);
 
     return Results.Ok(new
     {

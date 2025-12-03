@@ -13,11 +13,13 @@ public class CnabImportService : ICnabImportService
 {
     private readonly AppDbContext _dbContext;
     private readonly ICnabLineParser _parser;
+    private readonly ILogger<CnabImportService> _logger;
 
-    public CnabImportService(AppDbContext dbContext, ICnabLineParser parser)
+    public CnabImportService(AppDbContext dbContext, ICnabLineParser parser, ILogger<CnabImportService> logger)
     {
         _dbContext = dbContext;
         _parser = parser;
+        _logger = logger;
     }
 
     /// <inheritdoc />
@@ -30,6 +32,8 @@ public class CnabImportService : ICnabImportService
 
         var lineNumber = 0;
 
+        _logger.LogInformation("Starting CNAB import.");
+
         string? line;
         while ((line = await reader.ReadLineAsync()) is not null)
         {
@@ -37,7 +41,7 @@ public class CnabImportService : ICnabImportService
 
             if (string.IsNullOrWhiteSpace(line))
             {
-                // Empty or whitespace-only lines are ignored and not counted
+                _logger.LogWarning("Skipping empty/whitespace line {LineNumber}.", lineNumber);
                 continue;
             }
 
@@ -50,11 +54,11 @@ public class CnabImportService : ICnabImportService
             }
             catch (Exception ex)
             {
+                _logger.LogWarning(ex, "Failed to import line {LineNumber}.", lineNumber);
                 failed.Add(new CnabImportErrorDto(lineNumber, ex.Message, line));
             }
         }
 
-        // Persist all valid transactions
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         var totalLines = imported.Count + failed.Count;

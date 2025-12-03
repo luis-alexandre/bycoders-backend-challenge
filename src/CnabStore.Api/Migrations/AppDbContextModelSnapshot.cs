@@ -46,6 +46,10 @@ namespace CnabStore.Api.Migrations
 
                     b.HasIndex("OwnerName");
 
+                    b.HasIndex("Name", "OwnerName")
+                        .IsUnique()
+                        .HasDatabaseName("UX_Stores_Name_OwnerName");
+
                     b.ToTable("stores", (string)null);
                 });
 
@@ -85,7 +89,8 @@ namespace CnabStore.Api.Migrations
 
                     b.HasIndex("OccurredAt");
 
-                    b.HasIndex("StoreId");
+                    b.HasIndex("StoreId")
+                        .HasDatabaseName("IX_Transactions_StoreId");
 
                     b.ToTable("transactions", (string)null);
                 });

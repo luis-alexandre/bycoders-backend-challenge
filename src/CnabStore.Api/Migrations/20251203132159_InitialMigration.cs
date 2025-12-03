@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CnabStore.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,6 +60,12 @@ namespace CnabStore.Api.Migrations
                 column: "OwnerName");
 
             migrationBuilder.CreateIndex(
+                name: "UX_Stores_Name_OwnerName",
+                table: "stores",
+                columns: new[] { "Name", "OwnerName" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_transactions_Cpf",
                 table: "transactions",
                 column: "Cpf");
@@ -70,7 +76,7 @@ namespace CnabStore.Api.Migrations
                 column: "OccurredAt");
 
             migrationBuilder.CreateIndex(
-                name: "IX_transactions_StoreId",
+                name: "IX_Transactions_StoreId",
                 table: "transactions",
                 column: "StoreId");
         }

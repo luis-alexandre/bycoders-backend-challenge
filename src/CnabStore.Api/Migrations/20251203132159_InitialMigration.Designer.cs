@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CnabStore.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251202212245_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251203132159_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,10 @@ namespace CnabStore.Api.Migrations
                     b.HasIndex("Name");
 
                     b.HasIndex("OwnerName");
+
+                    b.HasIndex("Name", "OwnerName")
+                        .IsUnique()
+                        .HasDatabaseName("UX_Stores_Name_OwnerName");
 
                     b.ToTable("stores", (string)null);
                 });
@@ -88,7 +92,8 @@ namespace CnabStore.Api.Migrations
 
                     b.HasIndex("OccurredAt");
 
-                    b.HasIndex("StoreId");
+                    b.HasIndex("StoreId")
+                        .HasDatabaseName("IX_Transactions_StoreId");
 
                     b.ToTable("transactions", (string)null);
                 });

@@ -30,5 +30,9 @@ public class StoreConfiguration : IEntityTypeConfiguration<Store>
 
         builder.HasIndex(s => s.Name);
         builder.HasIndex(s => s.OwnerName);
+
+        builder.HasIndex(s => new { s.Name, s.OwnerName })
+               .IsUnique()
+               .HasDatabaseName("UX_Stores_Name_OwnerName");
     }
 }

@@ -5,6 +5,7 @@ using CnabStore.Api.Domain;
 using CnabStore.Api.Infrastructure;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System.Text;
 using Xunit;
@@ -16,6 +17,9 @@ namespace CnabStore.Tests;
 /// </summary>
 public class CnabImportServiceTests
 {
+    private Mock<ILogger<CnabImportService>> _loggerMock = new Mock<ILogger<CnabImportService>>();
+
+
     private static AppDbContext CreateInMemoryDbContext()
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()
@@ -56,7 +60,7 @@ public class CnabImportServiceTests
         parserMock.Setup(p => p.ParseLine(line1)).Returns(dto1);
         parserMock.Setup(p => p.ParseLine(line2)).Returns(dto2);
 
-        var service = new CnabImportService(dbContext, parserMock.Object);
+        var service = new CnabImportService(dbContext, parserMock.Object, _loggerMock.Object);
 
         // Note: an empty last line is ignored (not counted in TotalLines).
         var cnabContent = $"{line1}\n{line2}\n";
@@ -114,7 +118,7 @@ public class CnabImportServiceTests
         parserMock.Setup(p => p.ParseLine(invalidLine))
                   .Throws(new ArgumentException("Invalid transaction value format: 'ABCDEFGHIJ'."));
 
-        var service = new CnabImportService(dbContext, parserMock.Object);
+        var service = new CnabImportService(dbContext, parserMock.Object, _loggerMock.Object);
 
         var cnabContent = $"{validLine}\n{invalidLine}\n";
         await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(cnabContent));
@@ -180,7 +184,7 @@ public class CnabImportServiceTests
         parserMock.Setup(p => p.ParseLine(line1)).Returns(dto1);
         parserMock.Setup(p => p.ParseLine(line2)).Returns(dto2);
 
-        var service = new CnabImportService(dbContext, parserMock.Object);
+        var service = new CnabImportService(dbContext, parserMock.Object, _loggerMock.Object);
 
         // Empty/whitespace lines should be ignored completely (not counted in TotalLines)
         var cnabContent = $"{line1}\n\n   \n{line2}\n";
@@ -228,7 +232,7 @@ public class CnabImportServiceTests
 
         parserMock.Setup(p => p.ParseLine(line)).Returns(dto);
 
-        var service = new CnabImportService(dbContext, parserMock.Object);
+        var service = new CnabImportService(dbContext, parserMock.Object, _loggerMock.Object);
 
         var cnabContent = line;
         await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(cnabContent));

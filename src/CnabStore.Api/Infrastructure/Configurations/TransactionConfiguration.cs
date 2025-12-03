@@ -42,5 +42,8 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.HasIndex(t => t.StoreId);
         builder.HasIndex(t => t.OccurredAt);
         builder.HasIndex(t => t.Cpf);
+
+        builder.HasIndex(t => t.StoreId)
+               .HasDatabaseName("IX_Transactions_StoreId");
     }
 }
